@@ -1,0 +1,39 @@
+html,
+body,
+#app,
+#app > .container-fluid {
+  height: 100%;
+}
+
+#app { margin-top: 0; }
+
+.about-container,
+.drug-search-container {
+    max-width: 300px;
+}
+
+.about-container {
+    position: absolute;
+    bottom: 0;
+}
+
+.drug-search-container ul {
+    padding-left: 10px;
+}
+.drug-search-container ul li {
+    list-style-type: disc;
+    display: list-item;
+}
+
+.controls {
+    height: 100%;
+    background: #f2f2f2;
+}
+
+.graph { width: 100%; }
+
+
+#pie {
+  max-width: 650px;
+  margin: 35px auto;
+}
