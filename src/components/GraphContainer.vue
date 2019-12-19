@@ -2,7 +2,7 @@
   <div>
     <main role="main" class="col-lg-12 pt-3 px-4">
           <div class="graph d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Risk Profile by Body System (Pie Chart)</h1>
+            <h2 class="h2">Risk Profile by Body System</h2>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
                 <button  disabled class="btn btn-sm btn-outline-secondary">Share</button>
@@ -19,7 +19,7 @@
 
           <br/>
           <div class="graph d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Risk Profile Matrix</h1>
+            <h3 class="h2">Risk Profile Matrix</h3>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
                 <button  disabled class="btn btn-sm btn-outline-secondary">Share</button>
@@ -28,7 +28,9 @@
             </div>
           </div>
 
-          <div ref="chart-heatmap" id="chart-heatmap"></div>
+          <div id="chart-matrix-container">
+            <div ref="chart-matrix" id="chart-matrix"></div>
+          </div>
     </main>
   </div>
 </template>
@@ -45,13 +47,23 @@ export default {
   data: function () {
     return {
       reactions: [],
-      piechart: {}
+      piechart: {},
+      matrixchart: {
+        'unknown': { severe: 0, unsevere: 0 },
+        'very rare': { severe: 0, unsevere: 0 },
+        'rare': { severe: 0, unsevere: 0 },
+        'uncommon': { severe: 0, unsevere: 0 },
+        'common': { severe: 0, unsevere: 0 },
+        'very common': { severe: 0, unsevere: 0 }
+      }
     }
   },
   methods: {
     async getAdverseReactions (drugs) {
       DrugsApi.adverseReactions(drugs).then(result => {
         this.reactions = result.data.items
+
+        //  Process data required for generating the pie chart
         this.reactions.forEach((reaction) => {
           if (this.piechart.hasOwnProperty(reaction.bodySystem)) {
             this.piechart[reaction.bodySystem]++
@@ -59,11 +71,24 @@ export default {
             this.piechart[reaction.bodySystem] = 1
           }
         })
+
+        //  Process data required for generating the matrix chart
+        this.reactions.forEach((reaction) => {
+          if (reaction.severity) {
+            this.matrixchart[reaction.frequency].severe++
+          } else {
+            this.matrixchart[reaction.frequency].unsevere++
+          }
+        })
+
+        //  Render pie chart
         this.renderPieChart()
+
+        //  Render matrix chart
+        this.renderMatrixChart()
       })
     },
     renderPieChart: function (event) {
-      console.log('render pie chart')
       let labels = []
       let series = []
 
@@ -83,7 +108,7 @@ export default {
 
       let options = {
         chart: {
-          width: 1080,
+          width: 720,
           type: 'pie'
         },
         labels: labels,
@@ -107,13 +132,26 @@ export default {
         this.piechart = {}
       }
     },
-    renderHeatmapChart: function (event) {
-      function generateData (count, yrange) {
+    renderMatrixChart: function (event) {
+      var matrixchart = document.querySelector('#chart-matrix')
+      matrixchart.parentNode.removeChild(matrixchart)
+
+      var matrixchartcontainer = document.querySelector('#chart-matrix-container')
+      var newMatrixChart = document.createElement('div')
+      newMatrixChart.id = 'chart-matrix'
+      newMatrixChart.ref = 'chart-matrix'
+      matrixchartcontainer.appendChild(newMatrixChart)
+
+      console.log(this.matrixchart)
+      console.log(this.reactions)
+      let matrix = this.matrixchart
+
+      function generateData (count, key) {
         var i = 0
         var series = []
         while (i < count) {
-          var x = 'w' + (i + 1).toString()
-          var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
+          var x = i === 0 ? 'Not Severe' : 'Severe'
+          var y = (i === 0) ? matrix[key].unsevere : matrix[key].severe
 
           series.push({
             x: x,
@@ -127,90 +165,45 @@ export default {
       var options = {
         chart: {
           height: 350,
+          width: 500,
           type: 'heatmap'
         },
         dataLabels: {
           enabled: false
         },
-        colors: ['#008FFB'],
+        colors: ['#fb1f1d'],
         series: [{
-          name: 'Metric1',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
+          name: 'Unknown',
+          data: generateData(2, 'unknown')
         },
         {
-          name: 'Metric2',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
+          name: 'Very Rare',
+          data: generateData(2, 'very rare')
         },
         {
-          name: 'Metric3',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
+          name: 'Rare',
+          data: generateData(2, 'rare')
         },
         {
-          name: 'Metric4',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
+          name: 'Uncommon',
+          data: generateData(2, 'uncommon')
         },
         {
-          name: 'Metric5',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
+          name: 'Common',
+          data: generateData(2, 'common')
         },
         {
-          name: 'Metric6',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
-        },
-        {
-          name: 'Metric7',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
-        },
-        {
-          name: 'Metric8',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
-        },
-        {
-          name: 'Metric9',
-          data: generateData(18, {
-            min: 0,
-            max: 90
-          })
+          name: 'Very common',
+          data: generateData(2, 'very common')
         }
-        ],
-        title: {
-          text: 'HeatMap Chart (Single color)'
-        }
+        ]
 
       }
-      if (this.$refs['chart-heatmap']) {
-        var chart = new ApexCharts(document.querySelector('#chart-heatmap'), options)
+      if (this.$refs['chart-matrix']) {
+        var chart = new ApexCharts(document.querySelector('#chart-matrix'), options)
         chart.render()
       }
     }
-  },
-
-  mounted () {
-    this.renderHeatmapChart()
   },
   watch: {
     drugs: function (drugs) {

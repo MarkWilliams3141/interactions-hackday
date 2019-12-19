@@ -6,7 +6,7 @@
           <Sidebar :drugs="selectedDrugs" v-on:selectedDrugChange="onSelectedDrugChange" :reset="reset"/>
         </div>
         <div class="visualisation col-sm-4 col-lg-10">
-          <GraphContainer :drugs="selectedDrugs" />
+          <GraphContainer v-show="selectedDrugs.length > 0" :drugs="selectedDrugs" />
         </div>
       </div>
     </div>
