@@ -5,7 +5,7 @@ A tool plot areas of risk for additive side-effects when given a patient drug pr
 - Risk profile by body system pie chart
 - Risk profile 'matrix' by severity and frequency
 
-## background and limitations
+## Background and limitations
 
 This was a single day hackday project to investigate ways to present data from Martindale's Adverse Drug Reaction. The Optimised Content API is still a WIP progress so much of the data was unavaiable or broken. 
 
