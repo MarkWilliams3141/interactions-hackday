@@ -5,11 +5,14 @@ A tool plot areas of risk for additive side-effects when given a patient drug pr
 - Risk profile by body system pie chart
 - Risk profile 'matrix' by severity and frequency
 
-## Background and limitations
+## Background
 
-This was a single day hackday project to investigate ways to present data from Martindale's Adverse Drug Reaction. The Optimised Content API is still a WIP progress so much of the data was unavaiable or broken. 
+This was a single day hackday project to investigate ways to present data from Martindale's Adverse Drug Reaction.
 
-A reverse proxy has not been created to expect to see CORs errors (The workaround is to use the CORS unblock extension in Chrome or Firefox).
+## Limitations
+
+- The Optimised Content API is still a WIP progress so much of the data is mostly unavailable or broken. 
+- A reverse proxy has not been created to expect to see CORs errors. The workaround is to use the CORS unblock extension for your browser or configure your browsers security settings to ignore CORs policy.
 
 ## Project setup
 ```
