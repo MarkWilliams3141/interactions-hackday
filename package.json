@@ -13,7 +13,7 @@
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.1.0",
     "core-js": "^2.6.5",
-    "underscore": "^1.9.1",
+    "underscore": "^1.12.1",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-bootstrap-typeahead": "^0.2.6"
